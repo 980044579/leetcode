@@ -1,6 +1,175 @@
 # Array_medium
+## [Maximum Product Subarray](https://leetcode.com/problems/maximum-product-subarray/)
 
+>Find the contiguous subarray within an array (containing at least one number) which has the largest product.
 
+For example, given the array [2,3,-2,4],
+the contiguous subarray [2,3] has the largest product = 6.
+
+```python
+class Solution(object):
+    def maxProduct(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        n = len(nums)
+        imax,imin,r = nums[0],nums[0],nums[0]
+        for i in range(1,n):
+            if nums[i]<0:
+                swap = imax
+                imax = imin
+                imin = swap
+            imax = max(nums[i],imax*nums[i]) #如果0的话，将之前的记录全部清空，但是r中保持了之前的最大值
+            imin = min(nums[i],imin*nums[i])
+
+            r = max(r,imax)
+        return r
+```
+## [Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/)
+
+>Suppose a sorted array is rotated at some pivot unknown to you beforehand.
+
+(i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
+
+Find the minimum element.
+
+You may assume no duplicate exists in the array.
+```python
+class Solution(object):
+    def findMin(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        r = len(nums)-1
+        l = 0
+        mid = (r+l)//2
+        if r == 0:
+            return nums[0]
+        while mid >l:
+
+            if nums[mid]>nums[mid+1]:
+                return nums[mid+1]
+            elif nums[mid]>nums[l]:
+                l = mid
+            else:
+                r = mid
+            mid = (r+l)//2
+        return min(nums[0],nums[1])
+
+```
+## [Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/)
+>Given an array of n positive integers and a positive integer s, find the minimal length of a subarray of which the sum ≥ s. If there isn't one, return 0 instead.
+
+For example, given the array [2,3,1,2,4,3] and s = 7,
+the subarray [4,3] has the minimal length under the problem constraint.
+
+```python
+class Solution(object):
+    def minSubArrayLen(self, s, nums):
+        """
+        :type s: int
+        :type nums: List[int]
+        :rtype: int
+        """
+        count,l,r,res,n= 0,0,0,float('inf'),len(nums)
+        for r in range(n):
+            count += nums[r]
+            while l <= r and count>= s:
+                res = min(res,r-l+1)
+                count -= nums[l]
+                l += 1
+        return res if res < float('inf') else 0
+```
+## [ Find Peak Element](https://leetcode.com/problems/find-peak-element/)
+>A peak element is an element that is greater than its neighbors.
+
+>Given an input array where num[i] ≠ num[i+1], find a peak element and return its index.
+
+>The array may contain multiple peaks, in that case return the index to any one of the peaks is fine.
+
+>You may imagine that num[-1] = num[n] = -∞.
+
+```python
+class Solution(object):
+    def findPeakElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        n = len(nums)
+        if n ==1 :
+            return 0
+        if n ==0 :
+            return
+
+        mid,l,h= 0,0,n-1
+        while l<h:
+            mid = (l+h)//2
+            if nums[mid] > nums[mid+1]:
+                h = mid
+            elif nums[mid] < nums[mid+1]:
+                l = mid + 1
+        return l
+```
+
+For example, in array [1, 2, 3, 1], 3 is a peak element and your function should return the index number 2.
+## [ombination Sum III](https://leetcode.com/problems/combination-sum-iii/)
+>Find all possible combinations of k numbers that add up to a number n, given that only numbers from 1 to 9 can be used and each combination should be a unique set of numbers.
+
+Example 1:
+
+Input: k = 3, n = 7
+
+Output:
+
+[[1,2,4]]
+
+Example 2:
+
+Input: k = 3, n = 9
+
+Output:
+
+[[1,2,6], [1,3,5], [2,3,4]]
+
+```python
+class Solution(object):
+    def combinationSum3(self, k, n):
+        """
+        :type k: int
+        :type n: int
+        :rtype: List[List[int]]
+        """
+        stack = [(0,1,[])] # total,start,comb
+        ans = []
+        while stack:
+            total,start,comb = stack.pop()
+            if total == n and len(comb) == k:
+                ans.append(comb)
+                continue
+            for i in range(start,10):
+                tmp_total = total + i
+                if tmp_total>n:
+                    break
+                stack.append((tmp_total,i+1,comb+[i]))
+        return ans
+```
+## [Summary Ranges](https://leetcode.com/problems/summary-ranges/)
+>Given a sorted integer array without duplicates, return the summary of its ranges.
+
+For example, given [0,1,2,4,5,7], return ["0->2","4->5","7"].
+
+```python
+def summaryRanges(self, nums):
+    ranges = []
+    for n in nums:
+        if not ranges or n > ranges[-1][-1] + 1:
+            ranges += [],
+        ranges[-1][1:] = n,
+    return ['->'.join(map(str, r)) for r in ranges]
+```
 
 ## [Majority Element II](https://leetcode.com/problems/majority-element-ii/)
 >Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times. The algorithm should run in linear time and in O(1) space.
