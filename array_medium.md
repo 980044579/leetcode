@@ -1,4 +1,91 @@
 # Array_medium
+## [Remove Duplicates from Sorted Array II](https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/)
+>Follow up for "Remove Duplicates":
+What if duplicates are allowed at most twice?
+
+For example,
+Given sorted array nums = [1,1,1,2,2,3],
+
+Your function should return length = 5, with the first five elements of nums being 1, 1, 2, 2 and 3. It doesn't matter what you leave beyond the new length.
+
+```python
+class Solution(object):
+    def removeDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        i = 0
+        for n in nums:
+            if i < 2 or n > nums[i-2]:
+                nums[i] = n
+                i+=1
+        return i
+```
+## [Subsets II](https://leetcode.com/problems/subsets-ii/)
+>Given a collection of integers that might contain duplicates, nums, return all possible subsets.
+
+Note: The solution set must not contain duplicate subsets.
+
+For example,
+If nums = [1,2,2], a solution is:
+
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+
+```python
+class Solution(object):
+    def subsetsWithDup(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        res = [[]]
+        nums.sort()
+        for i in range(len(nums)):
+            if i == 0 or nums[i] != nums[i-1]:
+                l = len(res)
+            for j in range(len(res)-l,len(res)):
+                res.append(res[j]+[nums[i]])
+        return res
+```
+
+
+## [Triangle](https://leetcode.com/problems/triangle/)
+>Given a triangle, find the minimum path sum from top to bottom. Each step you may move to adjacent numbers on the row below.
+
+For example, given the following triangle
+[
+     [2],
+    [3,4],
+   [6,5,7],
+  [4,1,8,3]
+]
+The minimum path sum from top to bottom is 11 (i.e., 2 + 3 + 5 + 1 = 11).
+
+Note:
+Bonus point if you are able to do this using only O(n) extra space, where n is the total number of rows in the triangle.
+
+```python
+class Solution(object):
+    def minimumTotal(self, triangle):
+        """
+        :type triangle: List[List[int]]
+        :rtype: int
+        """
+        if not triangle:
+                return
+        for i in xrange(len(triangle)-2, -1, -1):
+            for j in xrange(len(triangle[i])):
+                triangle[i][j] += min(triangle[i+1][j], triangle[i+1][j+1])#自底向上进行一个循环
+        return triangle[0][0]
+```
 ## [Maximum Product Subarray](https://leetcode.com/problems/maximum-product-subarray/)
 
 >Find the contiguous subarray within an array (containing at least one number) which has the largest product.
@@ -115,7 +202,7 @@ class Solution(object):
 ```
 
 For example, in array [1, 2, 3, 1], 3 is a peak element and your function should return the index number 2.
-## [ombination Sum III](https://leetcode.com/problems/combination-sum-iii/)
+## [Combination Sum III](https://leetcode.com/problems/combination-sum-iii/)
 >Find all possible combinations of k numbers that add up to a number n, given that only numbers from 1 to 9 can be used and each combination should be a unique set of numbers.
 
 Example 1:
