@@ -1,4 +1,411 @@
 # Array_medium
+
+## [Combination Sum II](https://leetcode.com/problems/combination-sum-ii/)
+>Given a collection of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+
+Each number in C may only be used once in the combination.
+
+Note:
+All numbers (including target) will be positive integers.
+The solution set must not contain duplicate combinations.
+For example, given candidate set [10, 1, 2, 7, 6, 1, 5] and target 8,
+A solution set is:
+[
+  [1, 7],
+  [1, 2, 5],
+  [2, 6],
+  [1, 1, 6]
+]
+
+```python
+class Solution(object):
+    def combinationSum2(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        candidates = sorted(candidates)
+        res = []
+        self.dfs(candidates,target,0,[],res)
+        return res
+
+    def dfs(self,nums,target,index,path,res):
+        if target == 0:
+            res.append(path)
+            return
+        for i in range(index,len(nums)):
+            if (i>index and nums[i]==nums[i-1]):
+                continue
+            if nums[i] > target:
+                break
+            self.dfs(nums,target-nums[i],i+1,path+[nums[i]],res)
+
+```
+## [Combination Sum](https://leetcode.com/problems/combination-sum/)
+>Given a set of candidate numbers (C) (without duplicates) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+
+The same repeated number may be chosen from C unlimited number of times.
+
+Note:
+All numbers (including target) will be positive integers.
+The solution set must not contain duplicate combinations.
+For example, given candidate set [2, 3, 6, 7] and target 7,
+A solution set is:
+[
+  [7],
+  [2, 2, 3]
+]
+
+```python
+class Solution(object):
+    def combinationSum(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        res = []
+        self.dfs(candidates,target,0,[],res)
+        return res
+    def dfs(self,candidates,target,index,path,res):
+        if target < 0:
+            return
+        if target ==0:
+            res.append(path)
+            return
+        for i in range(index,len(candidates)):
+            self.dfs(candidates,target-candidates[i],i,path+[candidates[i]],res)    
+```
+## [Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)
+>Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
+
+For example, given the array [-2,1,-3,4,-1,2,1,-5,4],
+the contiguous subarray [4,-1,2,1] has the largest sum = 6.
+
+>Tip:
+>this problem was discussed by Jon Bentley (Sep. 1984 Vol. 27 No. 9 Communications of the ACM P885)
+
+>the paragraph below was copied from his paper (with a little modifications)
+
+>algorithm that operates on arrays: it starts at the left end (element A[1]) and scans through to the right end (element A[n]), keeping track of the maximum sum subvector seen so far. The maximum is initially A[0]. Suppose we've solved the problem for A[1 .. i - 1]; how can we extend that to A[1 .. i]? The maximum
+sum in the first I elements is either the maximum sum in the first i - 1 elements (which we'll call MaxSoFar), or it is that of a subvector that ends in position i (which we'll call MaxEndingHere).
+
+>MaxEndingHere is either A[i] plus the previous MaxEndingHere, or just A[i], whichever is larger.
+
+```python
+class Solution(object):
+    def maxSubArray(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        maxSoFar,maxEndingHere = nums[0],nums[0]
+        for i in range(1,len(nums)):
+            maxEndingHere = max(maxEndingHere+nums[i],nums[i])
+            maxSoFar = max(maxSoFar,maxEndingHere)
+        return maxSoFar
+
+```
+## [Spiral Matrix II](https://leetcode.com/problems/spiral-matrix-ii/)
+
+>Given an integer n, generate a square matrix filled with elements from 1 to n2 in spiral order.
+
+For example,
+Given n = 3,
+
+You should return the following matrix:
+[
+ [ 1, 2, 3 ],
+ [ 8, 9, 4 ],
+ [ 7, 6, 5 ]
+]
+
+
+Solution 1: Build it inside-out - 44 ms, 5 lines
+
+Start with the empty matrix, add the numbers in reverse order until we added the number 1. Always rotate the matrix clockwise and add a top row:
+
+    ||  =>  |9|  =>  |8|      |6 7|      |4 5|      |1 2 3|
+                     |9|  =>  |9 8|  =>  |9 6|  =>  |8 9 4|
+                                         |8 7|      |7 6 5|
+
+```python
+class Solution(object):
+  def generateMatrix(self, n):
+      A, lo = [], n*n+1
+      while lo > 1:
+          lo, hi = lo - len(A), lo
+          A = [range(lo, hi)] + zip(*A[::-1])
+      return A
+```
+## [Spiral Matrix](https://leetcode.com/problems/spiral-matrix/)
+>Given a matrix of m x n elements (m rows, n columns), return all elements of the matrix in spiral order.
+
+For example,
+Given the following matrix:
+
+[
+ [ 1, 2, 3 ],
+ [ 4, 5, 6 ],
+ [ 7, 8, 9 ]
+]
+You should return [1,2,3,6,9,8,7,4,5].
+
+```python
+class Solution(object):
+    def spiralOrder(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: List[int]
+        """
+        ret = []
+        while matrix:
+            ret += matrix.pop(0)
+            if matrix and matrix[0]:
+                for row in matrix:
+                    ret.append(row.pop())
+            if matrix:
+                ret += matrix.pop()[::-1]
+
+            if matrix and matrix[0]:
+                for row in matrix[::-1]:
+                    ret.append(row.pop(0))
+        return ret
+
+
+```
+## [Unique Paths II](https://leetcode.com/problems/unique-paths-ii/)
+>Follow up for "Unique Paths":
+
+Now consider if some obstacles are added to the grids. How many unique paths would there be?
+
+An obstacle and empty space is marked as 1 and 0 respectively in the grid.
+
+For example,
+There is one obstacle in the middle of a 3x3 grid as illustrated below.
+
+[
+  [0,0,0],
+  [0,1,0],
+  [0,0,0]
+]
+The total number of unique paths is 2.
+
+Note: m and n will be at most 100.
+
+```python
+class Solution(object):
+    def uniquePathsWithObstacles(self, obstacleGrid):
+        """
+        :type obstacleGrid: List[List[int]]
+        :rtype: int
+        """
+        m = len(obstacleGrid)
+        n = len(obstacleGrid[0])
+        resGrid = [[0 for i in range(n+1)] for j in range(m+1)]
+        resGrid[0][1] = 1
+
+        for i in range(1,m+1):
+            for j in range(1,n+1):
+                if not obstacleGrid[i-1][j-1]:
+                    resGrid[i][j] = resGrid[i-1][j]+resGrid[i][j-1]
+        return resGrid[m][n]          
+
+```
+## [Unique Paths](https://leetcode.com/problems/unique-paths/)
+>A robot is located at the top-left corner of a m x n grid (marked 'Start' in the diagram below).
+
+The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid (marked 'Finish' in the diagram below).
+
+How many possible unique paths are there?
+
+
+Above is a 3 x 7 grid. How many possible unique paths are there?
+
+```python
+class Solution(object):
+    def uniquePaths(self, m, n):
+        """
+        :type m: int
+        :type n: int
+        :rtype: int
+        """
+        aux = [[1 for x in range(n)] for x in range(m)]
+        for i in range(1,m):
+            for j in range(1,n):
+                aux[i][j] = aux[i-1][j]+aux[i][j-1]
+        return aux[m-1][n-1]
+
+
+```
+## [Minimum Path Sum](https://leetcode.com/problems/minimum-path-sum/)
+>Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right which minimizes the sum of all numbers along its path.
+
+Note: You can only move either down or right at any point in time.
+
+```python
+class Solution(object):
+    def minPathSum(self, grid):
+        """
+        :type grid: List[List[int]]
+        :rtype: int
+        """
+        m = len(grid)
+        n = len(grid[0])
+        for i in range(1,n):
+            grid[0][i] += grid[0][i-1]
+        for j in range(1,m):
+            grid[j][0] += grid[j-1][0]
+        for i in range(1,m):
+            for j in range(1,n):
+                grid[i][j] += min(grid[i-1][j],grid[i][j-1])
+        return grid[-1][-1]
+```
+## [Set Matrix Zeroes](https://leetcode.com/problems/set-matrix-zeroes/)
+>Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do it in place.
+
+```python
+class Solution(object):
+    def setZeroes(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: void Do not return anything, modify matrix in-place instead.
+        """
+        col0 = 1
+        rows = len(matrix)
+        cols = len(matrix[0])
+        for i in range(rows):
+            if matrix[i][0] == 0:
+                col0 = 0
+            for j in range(1,cols):
+                if matrix[i][j] == 0:
+                    matrix[0][j],matrix[i][0] = 0,0
+
+        for i in range(rows-1,-1,-1):
+            for j in range(cols-1,0,-1):
+                if matrix[i][0] == 0 or matrix[0][j] == 0:
+                    matrix[i][j] = 0
+            if col0 == 0:
+                matrix[i][0] = 0
+```
+## [Sort Colors](https://leetcode.com/problems/sort-colors/)
+>Given an array with n objects colored red, white or blue, sort them so that objects of the same color are adjacent, with the colors in the order red, white and blue.
+
+Here, we will use the integers 0, 1, and 2 to represent the color red, white, and blue respectively.
+
+Note:
+You are not suppose to use the library's sort function for this problem.
+
+click to show follow up.
+
+Subscribe to see which companies asked this question
+
+Show Tags
+Show Similar Problems
+
+```python
+class Solution(object):
+    def sortColors(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: void Do not return anything, modify nums in-place instead.
+        """
+        i,j = 0,0
+        for k in range(len(nums)):
+            v = nums[k]
+            nums[k] = 2
+            if v < 2:
+                nums[j] = 1
+                j += 1
+            if v == 0:
+                nums[i] = 0
+                i += 1
+
+```
+## [Subsets](https://leetcode.com/problems/subsets/)
+>Given a set of distinct integers, nums, return all possible subsets.
+
+Note: The solution set must not contain duplicate subsets.
+
+For example,
+If nums = [1,2,3], a solution is:
+
+[
+  [3],
+  [1],
+  [2],
+  [1,2,3],
+  [1,3],
+  [2,3],
+  [1,2],
+  []
+]
+
+```python
+class Solution(object):
+    def subsets(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        if not nums:
+            return []
+        out = [[]]
+        for num in nums:
+            n = len(out)
+            for i in range(n):
+                out.append(out[i]+[num])
+        return out
+
+```
+## [ Word Search](https://leetcode.com/problems/word-search/)
+>Given a 2D board and a word, find if the word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+For example,
+Given board =
+
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+word = "ABCCED", -> returns true,
+word = "SEE", -> returns true,
+word = "ABCB", -> returns false.
+
+```python
+def exist(self, board, word):
+    """
+    :type board: List[List[str]]
+    :type word: str
+    :rtype: bool
+    """
+    if not board:
+        return False
+    for i in xrange(len(board)):
+        for j in xrange(len(board[0])):
+            if self.dfs(board, i, j, word):
+                return True
+    return False
+
+# check whether can find word, start at (i,j) position    
+class Solution(object):
+  def dfs(self, board, i, j, word):
+      if len(word) == 0: # all the characters are checked
+          return True
+      if i<0 or i>=len(board) or j<0 or j>=len(board[0]) or word[0]!=board[i][j]:
+          return False
+      tmp = board[i][j]  # first character is found, check the remaining part
+      board[i][j] = "#"  # avoid visit agian
+      # check whether can find "word" along one direction
+      res = self.dfs(board, i+1, j, word[1:]) or self.dfs(board, i-1, j, word[1:]) \
+      or self.dfs(board, i, j+1, word[1:]) or self.dfs(board, i, j-1, word[1:])
+      board[i][j] = tmp
+      return res
+```
 ## [Remove Duplicates from Sorted Array II](https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/)
 >Follow up for "Remove Duplicates":
 What if duplicates are allowed at most twice?
@@ -17,7 +424,7 @@ class Solution(object):
         """
         i = 0
         for n in nums:
-            if i < 2 or n > nums[i-2]:
+            if i < 2 or n > nums[i-2]:#已经排好序，所以只需要比较n和nums[i-2]的大小
                 nums[i] = n
                 i+=1
         return i
