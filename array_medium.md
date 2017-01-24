@@ -1,5 +1,148 @@
 # Array_medium
 
+## [3Sum Closest](https://leetcode.com/problems/3sum-closest/)
+>Given an array S of n integers, find three integers in S such that the sum is closest to a given number, target. Return the sum of the three integers. You may assume that each input would have exactly one solution.
+
+    For example, given array S = {-1 2 1 -4}, and target = 1.
+
+    The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
+
+```python
+class Solution(object):
+    def threeSumClosest(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        ans = nums[0]+nums[1]+nums[2]
+        nums.sort()
+        for i in range(len(nums)-2):
+            if i>0 and nums[i] == nums[i-1]:
+                continue
+            l,r = i+1,len(nums)-1
+            while l<r:
+                s = nums[i]+nums[l]+nums[r]
+                if abs(ans - target)> abs(s - target):
+                    ans = s
+                if s > target:
+                    r -= 1
+                if s < target:
+                    l += 1
+                if s == target:
+                    return s
+        return ans
+```
+## [3Sum]（https://leetcode.com/problems/3sum/）
+>Given an array S of n integers, are there elements a, b, c in S such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
+
+Note: The solution set must not contain duplicate triplets.
+
+For example, given array S = [-1, 0, 1, 2, -1, -4],
+
+A solution set is:
+[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]
+
+```python
+def threeSum(self, nums):
+    res = []
+    nums.sort()
+    for i in xrange(len(nums)-2):
+        if i > 0 and nums[i] == nums[i-1]:
+            continue
+        l, r = i+1, len(nums)-1
+        while l < r:
+            s = nums[i] + nums[l] + nums[r]
+            if s < 0:
+                l +=1
+            elif s > 0:
+                r -= 1
+            else:
+                res.append((nums[i], nums[l], nums[r]))
+                while l < r and nums[l] == nums[l+1]:
+                    l += 1
+                while l < r and nums[r] == nums[r-1]:
+                    r -= 1
+                l += 1; r -= 1
+    return res
+```
+## [Search for a Range](https://leetcode.com/problems/search-for-a-range/)
+>Given an array of integers sorted in ascending order, find the starting and ending position of a given target value.
+
+Your algorithm's runtime complexity must be in the order of O(log n).
+
+If the target is not found in the array, return [-1, -1].
+
+For example,
+Given [5, 7, 7, 8, 8, 10] and target value 8,
+return [3, 4].
+
+```python
+class Solution(object):
+    def searchRange(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        if not nums:
+            return [-1,-1]
+        ret = [-1,-1]
+        lo,hi = 0,len(nums)-1
+        while lo < hi:
+            mid = (lo+hi)//2
+            if nums[mid] < target:
+                lo = mid + 1
+            else:
+                hi = mid
+        if target != nums[lo]:
+            return ret
+        ret[0] = lo
+        hi = len(nums)-1
+        while lo < hi:
+            mid = (lo + hi )//2+1
+            if nums[mid] > target:
+                hi = mid -1
+            else:
+                lo = mid
+        ret[1] = hi
+        return ret
+```
+
+## [Search Insert Position](https://leetcode.com/problems/search-insert-position/)
+>Given a sorted array and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
+
+You may assume no duplicates in the array.
+
+Here are few examples.
+[1,3,5,6], 5 → 2
+[1,3,5,6], 2 → 1
+[1,3,5,6], 7 → 4
+[1,3,5,6], 0 → 0
+
+```python
+class Solution(object):
+    def searchInsert(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        lo,hi = 0,len(nums)-1
+        while lo <= hi :
+            mid = lo + (hi - lo)//2
+            if target < nums[mid] :
+                hi = mid - 1
+            elif target > nums[mid]:
+                lo = mid + 1
+            else:
+                return mid
+        return lo
+
+```
 ## [Combination Sum II](https://leetcode.com/problems/combination-sum-ii/)
 >Given a collection of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
 
