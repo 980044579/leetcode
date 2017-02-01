@@ -1,6 +1,166 @@
 # String_medium
 
- 
+## [Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/)
+>Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
+
+Example:
+
+Input: "babad"
+
+Output: "bab"
+
+Note: "aba" is also a valid answer.
+Example:
+
+Input: "cbbd"
+
+Output: "bb"
+
+```python
+#每次新加一个字符，maxLen最多增加2或者1.
+class Solution(object):
+    def longestPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        maxLen = 1
+        start = 0
+        for i in range(len(s)):
+            if i-maxLen >= 1 and s[i-maxLen-1:i+1] == s[i-maxLen-1:i+1][::-1]:
+                start = i-maxLen-1
+                maxLen += 2
+                continue
+            if i-maxLen >= 0 and s[i-maxLen:i+1] == s[i-maxLen:i+1][::-1]:
+                start = i-maxLen
+                maxLen += 1
+        return s[start:start+maxLen]
+
+
+```
+## [ZigZag Conversion](https://leetcode.com/problems/zigzag-conversion/)
+>The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+
+P   A   H   N
+A P L S I I G
+Y   I   R
+And then read line by line: "PAHNAPLSIIGYIR"
+Write the code that will take a string and make this conversion given a number of rows:
+
+string convert(string text, int nRows);
+convert("PAYPALISHIRING", 3) should return "PAHNAPLSIIGYIR".
+
+
+```
+ZigZag pattern
+/*n=numRows
+Δ=2n-2    1                           2n-1                         4n-3
+Δ=        2                     2n-2  2n                    4n-4   4n-2
+Δ=        3               2n-3        2n+1              4n-5       .
+Δ=        .           .               .               .            .
+Δ=        .       n+2                 .           3n               .
+Δ=        n-1 n+1                     3n-3    3n-1                 5n-5
+Δ=2n-2    n                           3n-2                         5n-4
+```
+```python
+class Solution(object):
+    def convert(self, s, numRows):
+        """
+        :type s: str
+        :type numRows: int
+        :rtype: str
+        """
+        if numRows == 1 or len(s) <= numRows:
+            return s
+        L = ['']*numRows
+        num,step = 0,1
+        for i in s:
+            if num == 0:
+                step = 1
+            elif num == numRows-1:
+                step = -1
+            L[num] += i
+            num += step
+        return ''.join(L)
+
+
+```
+## [Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)
+>Given a digit string, return all possible letter combinations that the number could represent.
+
+Input:Digit string "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+
+
+```python
+class Solution(object):
+    def letterCombinations(self, digits):
+        """
+        :type digits: str
+        :rtype: List[str]
+        """
+        if ''==digits:return []
+        dic = {
+            '2':'abc',
+            '3':'def',
+            '4':'ghi',
+            '5':'jkl',
+            '6':'mno',
+            '7':'pqrs',
+            '8':'tuv',
+            '9':'wxyz'
+        }
+        return reduce(lambda acc,digit:[x+y for x in acc for y in dic[digit]],digits,[''])
+        #reduce()函数的第三个参数为初始值
+        # def reduce(function, iterable, initializer=None):
+        #     it = iter(iterable)
+        #     if initializer is None:
+        #         value = next(it)
+        #     else:
+        #         value = initializer
+        #     for element in it:
+        #         value = function(value, element)
+        #     return value
+
+```
+## [Generate Parentheses](https://leetcode.com/problems/generate-parentheses/)
+>Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+For example, given n = 3, a solution set is:
+
+[
+  "((()))",
+  "(()())",
+  "(())()",
+  "()(())",
+  "()()()"
+]
+
+```python
+#‘(’的数目必须大于等于‘)’的数目才是合法的
+class Solution(object):
+    def generateParenthesis(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+        if not n :
+            return []
+        left,right,ans,string = n,n,[],''
+        self.dfs(left,right,ans,string)
+        return ans
+    def dfs(self,left,right,ans,string):
+        if left > right:
+            return
+        if not left and not right:
+            ans.append(string)
+            return
+        if left:
+            self.dfs(left-1,right,ans,string+'(')
+        if right:
+            self.dfs(left,right-1,ans,string+')')
+
+```
 
 ## [Multiply Strings](https://leetcode.com/problems/multiply-strings/)
 >Given two non-negative integers num1 and num2 represented as strings, return the product of num1 and num2.
