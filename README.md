@@ -1,2 +1,2 @@
-All problems meet in leetcode. 
-Fihting!!
+All problems meet in leetcode.
+Fighting!!
