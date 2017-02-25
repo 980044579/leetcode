@@ -1,5 +1,112 @@
 # 剑指offer
-## 矩阵中的路径
+## P_283序列化二叉树
+>请实现两个函数，分别来序列化和反序列化二叉树
+
+tag：树
+
+### Soluthon：
+
+```python
+def Serialize(root,output):
+    if root == None:
+        out+'$,'
+        return
+    out+str(root.val)+','
+    Serialize(root.left,output)
+    Serialize(roo.right,output)
+
+
+def Deserialize(root,inpt):
+    inp = inpt.split(',')
+    DeserializeCore(root,inp)
+def DeserializeCore(root,inp):
+    inp = put.split(',')
+    value = inp.pop(0)
+    if value.isdigit():
+        root = TreeNode()
+        root.val = int(value)
+        root.left = None
+        root.right = None
+
+        Deserialize(root.left,inp)
+        Deserialize(root.right,inp)
+
+```
+
+## P_285二叉搜索树的第k个结点
+>给定一颗二叉搜索树，请找出其中的第k大的节点。
+
+tag：树
+### Soluthon
+
+```python
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+def KthNode(root,k):
+    if root == None or k == 0:
+        return None
+    return KthNodeCore(root,k)
+
+def KthNodeCore(root,k):
+    target = None
+
+    if  root.left:
+        target = KthNodeCore(root.left,k)
+    if targrt == None:
+        if k == 1:
+            target = root
+        k-=1
+    if target == None and root.right != None:
+        targrt = KthNodeCore(root.right,k)
+    return target
+
+```
+## P_186数据流中的中位数
+>如何得到一个数据流中的中位数？如果从数据流中读出奇数个数值，那么中位数就是所有数值排序之后位于中间的数值。如果从数据流中读出偶数个数值，那么中位数就是所有数值排序之后中间两个数的平均值
+
+###Soluthon：
+
+```python
+暂留
+
+```
+## P_290输出输出滑窗中的最大值
+
+tag ：队列，栈
+
+>输入一个列表，和滑窗大小，依次输出每个滑窗中的最大值。例如：[2,3,1,4,5,3,7] 和 划窗大小3则输出[2,4,5,5,7]
+
+### Solution：
+
+```python
+def FindTheMax(matrix,k):
+    if not matrix or k <= 0:
+        return []
+    if k>len(matrix):
+        print('非法输入')
+        return
+    ans,maxIdex = [],[]#ans存最后结果，maxInde存的是可能的最大值的下标
+    for i in range(k):
+        while len(maxIdex) != 0 and matrix[i] >= matrix[maxIdex[-1]]:
+            #print(maxIdex)
+            maxIdex.pop()
+        maxIdex.append(i)
+    for j in range(k,len(matrix)):
+        ans.append(matrix[maxIdex[0]])
+        while len(maxIdex) != 0 and matrix[j] >= matrix[maxIdex[-1]]:
+            maxIdex.pop()
+        if len(maxIdex) != 0 and maxIdex[0] <= j-k:
+            maxIdex.pop(0)
+        maxIdex.append(j)
+    ans.append(matrix[maxIdex[0]])
+    return ans
+```
+
+## P_294矩阵中的路径
 tag ： 回溯
 
 >设计一个函数来判断一个矩阵中是否存在一条包含字符串所有字符的路径，路径不能回走（走过的地方不能再走）
@@ -42,7 +149,7 @@ def hasPathCore(matrix,rows,cols,row,col,visited,string,pathLength):
 
 ```
 
-## 机器人的运动范围
+## P_296机器人的运动范围
 
 tag：回溯
 
