@@ -34,7 +34,7 @@ class Solution(object):
             carry,val = divmod(carry,10)
             n.next = n = ListNode(val)
         return res.next
-      
+
 ```
 ## [Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/?tab=Description)
 >Given a linked list, remove the nth node from the end of list and return its head.
@@ -319,8 +319,7 @@ class Solution(object):
             p2 = p2.next
         return ClonedHead
 ```
-## 【Linked List Cycle II】（https://leetcode.com/problems/linked-list-cycle-ii/?tab=Description）
-
+## [Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/?tab=Description)
 >Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
 
 Note: Do not modify the linked list.
