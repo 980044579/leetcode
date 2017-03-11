@@ -1,4 +1,126 @@
 # Linked List
+## [Minimum Depth of Binary Tree](https://leetcode.com/problems/minimum-depth-of-binary-tree/?tab=Description)
+>Given a binary tree, find its minimum depth.
+
+The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def minDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root :
+            return 0
+        elif not root.left or not root.right:
+            return self.minDepth(root.left)+self.minDepth(root.right)+1
+        return min(self.minDepth(root.left),self.minDepth(root.right))+1
+
+#另一个版本
+def minDepth(self, root):
+    return 0 if not root else self.dfs(root)
+def dfs(self, root):
+    return 1 + min([self.dfs(x) for x in (root.left,root.right) if x] or [0])
+```
+## [https://leetcode.com/problems/invert-binary-tree/?tab=Description](https://leetcode.com/problems/invert-binary-tree/?tab=Description)
+>Invert a binary tree.
+```
+     4
+   /   \
+  2     7
+ / \   / \
+1   3 6   9
+to
+     4
+   /   \
+  7     2
+ / \   / \
+9   6 3   1
+```
+
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def invertTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        if root:
+            root.left,root.right = root.right,root.left
+            # tmp = root.left
+            # root.left = root.right
+            # root.right = tmp
+            self.invertTree(root.left)
+            self.invertTree(root.right)
+        return root   
+```
+
+## [Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/?tab=Description)
+>Given a binary search tree (BST), find the lowest common ancestor (LCA) of two given nodes in the BST.
+
+According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes v and w as the lowest node in T that has both v and w as descendants (where we allow a node to be a descendant of itself).”
+```
+        _______6______
+       /              \
+    ___2__          ___8__
+   /      \        /      \
+   0      _4       7       9
+         /  \
+         3   5
+```
+For example, the lowest common ancestor (LCA) of nodes 2 and 8 is 6. Another example is LCA of nodes 2 and 4 is 2, since a node can be a descendant of itself according to the LCA definition.
+
+```python
+
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+#Iterative
+class Solution(object):
+    def lowestCommonAncestor(self, root, p, q):
+        """
+        :type root: TreeNode
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: TreeNode
+        """
+        while root:
+            if p.val < root.val > q.val:
+                root = root.left
+            elif p.val > root.val < q.val:
+                root = root.right
+            else:
+                return root
+
+#Recursive
+    def lowestCommonAncestor(self, root, p, q):
+        if p.val < root.val > q.val:
+            return self.lowestCommonAncestor(root.left, p, q)
+        if p.val > root.val < q.val:
+            return self.lowestCommonAncestor(root.right, p, q)
+        return root
+```
+
 
 ## [Add Two Numbers](https://leetcode.com/problems/add-two-numbers/?tab=Description)
 >You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.

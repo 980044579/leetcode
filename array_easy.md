@@ -1,4 +1,29 @@
 # Array_easy
+
+## [Majority Element](https://leetcode.com/problems/majority-element/)
+> Given an array of size n, find the majority element. The majority element is the element that appears more than ⌊ n/2 ⌋ times.
+
+>You may assume that the array is non-empty and the majority element always exist in the array.
+
+```python
+class Solution(object):
+    def majorityElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        count,candidate = 0,0
+        for n in nums :
+            if n == candidate:
+                count += 1
+            elif count == 0 :
+                candidate , count = n , 1
+            else :
+                count -= 1
+        return candidate
+```
+
+
 ## [Pascal's Triangle II](https://leetcode.com/problems/pascals-triangle-ii/)
 >Given an index k, return the kth row of the Pascal's triangle.
 
