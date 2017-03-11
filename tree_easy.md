@@ -1,5 +1,46 @@
 # Tree
+## [Symmetric Tree](https://leetcode.com/problems/symmetric-tree/?tab=Description)
+>Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
 
+For example, this binary tree [1,2,2,3,4,4,3] is symmetric:
+```
+1
+/ \
+2   2
+/ \ / \
+3  4 4  3
+But the following [1,2,2,null,3,null,3] is not:
+1
+/ \
+2   2
+\   \
+3    3
+```
+
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def isSymmetric(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        return self.helper(root,root)
+    def helper(self,root1,root2):
+        if not root1 and not root2:
+            return True
+        if not root1 or not root2:
+            return False
+        if root1.val != root2.val:
+            return False
+        return self.helper(root1.left,root2.right) and self.helper(root1.right,root2.left)
+```
 ## [Binary Tree Level Order Traversal II](https://leetcode.com/problems/binary-tree-level-order-traversal-ii/?tab=Description)
 >Given a binary tree, return the bottom-up level order traversal of its nodes' values. (ie, from left to right, level by level from leaf to root).
 
