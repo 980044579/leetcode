@@ -1,5 +1,484 @@
 # Tree
+## [Binary Tree Inorder Traversal](https://leetcode.com/problems/binary-tree-inorder-traversal/#/description)
+>Given a binary tree, return the inorder traversal of its nodes' values.
 
+For example:
+Given binary tree [1,null,2,3],
+```
+   1
+    \
+     2
+    /
+   3
+```
+return [1,3,2].
+
+Note: Recursive solution is trivial, could you do it iteratively?
+
+```python
+class Solution(object):
+    def inorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        res,stack = [],[]
+        while True:
+            while root:
+                stack.append(root)
+                root = root.left
+            if not stack:
+                return res
+            root = stack.pop()
+            res.append(root.val)
+            root = root.right
+
+```
+
+## [Unique Binary Search Trees II](https://leetcode.com/problems/unique-binary-search-trees-ii/#/description)
+>Given an integer n, generate all structurally unique BST's (binary search trees) that store values 1...n.
+
+For example,
+Given n = 3, your program should return all 5 unique BST's shown below.
+```
+
+   1         3     3      2      1
+    \       /     /      / \      \
+     3     2     1      1   3      2
+    /     /       \                 \
+   2     1         2                 3
+
+```
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def generateTrees(self, n):
+        """
+        :type n: int
+        :rtype: List[TreeNode]
+        """
+        return self.core(n,1)
+
+    def core(self,n,start_num):
+        if n == 0:
+            return []
+        ans = []
+        for i in range(1,n+1):
+            for m in self.core(i-1,start_num) or [None]:
+                for k in self.core(n-i,i+start_num) or [None]:
+                    root = TreeNode(i+start_num-1)
+                    root.left = m
+                    root.right = k
+                    ans.append(root)
+        return ans
+```            
+
+
+## [Unique Binary Search Trees](https://leetcode.com/problems/unique-binary-search-trees/#/description)
+>Given n, how many structurally unique BST's (binary search trees) that store values 1...n?
+
+For example,
+Given n = 3, there are a total of 5 unique BST's.
+```
+   1         3     3      2      1
+    \       /     /      / \      \
+     3     2     1      1   3      2
+    /     /       \                 \
+   2     1         2                 3
+```
+
+```python
+class Solution(object):
+    def numTrees(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        ans = [1]
+        for i in range(1,n+1):
+            tmp = 0
+            for j in range(i):
+                tmp += ans[j]*ans[i-j-1]
+            ans.append(tmp)
+        return ans[-1]
+```
+## [Flatten Binary Tree to Linked List](https://leetcode.com/problems/flatten-binary-tree-to-linked-list/#/description)
+>Given a binary tree, flatten it to a linked list in-place.
+
+For example,
+Given
+```
+         1
+        / \
+       2   5
+      / \   \
+     3   4   6
+The flattened tree should look like:
+   1
+    \
+     2
+      \
+       3
+        \
+         4
+          \
+           5
+            \
+             6
+```
+
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+#使用一个镜像的后序遍历，先保证右树是flatten再把右树移到左树下最后对头结点操作。
+class Solution(object):
+    def __init__(self):
+        self.prev = None
+    def flatten(self, root):
+        """
+        :type root: TreeNode
+        :rtype: void Do not return anything, modify root in-place instead.
+        """
+        if not root:
+            return None
+        self.flatten(root.right)
+        self.flatten(root.left)
+
+        root.right = self.prev
+        root.left = None
+        self.prev = root
+```
+## [Binary Tree Zigzag Level Order Traversal](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/#/description)
+>Given a binary tree, return the zigzag level order traversal of its nodes' values. (ie, from left to right, then right to left for the next level and alternate between).
+```
+For example:
+Given binary tree [3,9,20,null,null,15,7],
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its zigzag level order traversal as:
+[
+  [3],
+  [20,9],
+  [15,7]
+]
+```
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def zigzagLevelOrder(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+        if not root:
+            return []
+        stack1 = [root]
+        stack2 = []
+        ans = []
+        flg = 1
+        while stack1 or stack2:
+            tmpans = []
+            if flg == 1:
+                while stack1:
+                    tmp = stack1.pop()
+                    tmpans.append(tmp.val)
+                    if tmp.left:
+                        stack2.append(tmp.left)
+                    if tmp.right:
+                        stack2.append(tmp.right)
+                ans.append(tmpans)
+                flg = -flg
+            elif flg == -1:
+                while stack2:
+                    tmp = stack2.pop()
+                    tmpans.append(tmp.val)
+                    if tmp.right:
+                        stack1.append(tmp.right)
+                    if tmp.left:
+                        stack1.append(tmp.left)
+                ans.append(tmpans)
+                flg = -flg
+
+        return ans            
+```
+## [Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/#/description)
+>Given preorder and inorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def buildTree(self, preorder, inorder):
+        """
+        :type preorder: List[int]
+        :type inorder: List[int]
+        :rtype: TreeNode
+        """
+        if not inorder or not preorder:
+            return None
+        root = TreeNode(preorder.pop(0))
+        index = inorder.index(root.val)
+        root.left = self.buildTree(preorder[:index],inorder[:index])
+        root.right = self.buildTree(preorder[index:],inorder[index+1:])
+        return root     
+```
+
+
+## [Construct Binary Tree from Inorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/#/description)
+>Given inorder and postorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def buildTree(self, inorder, postorder):
+        """
+        :type inorder: List[int]
+        :type postorder: List[int]
+        :rtype: TreeNode
+        """
+        if not inorder or not postorder:
+            return None
+        root = TreeNode(postorder.pop())
+        index = inorder.index(root.val)
+
+        root.left = self.buildTree(inorder[:index], postorder[:index])
+        root.right = self.buildTree(inorder[index+1:], postorder[index:])
+        return root
+```
+
+## [Populating Next Right Pointers in Each Node II](https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/#/description)
+>Follow up for problem "Populating Next Right Pointers in Each Node".
+
+What if the given tree could be any binary tree? Would your previous solution still work?
+
+Note:
+
+You may only use constant extra space.
+For example,
+Given the following binary tree,
+```
+         1
+       /  \
+      2    3
+     / \    \
+    4   5    7
+After calling your function, the tree should look like:
+         1 -> NULL
+       /  \
+      2 -> 3 -> NULL
+     / \    \
+    4-> 5 -> 7 -> NULL
+```
+```python
+# Definition for binary tree with next pointer.
+# class TreeLinkNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+#         self.next = None
+
+class Solution:
+    # @param root, a tree link node
+    # @return nothing
+    def connect(self, root):
+        tail = dummy = TreeLinkNode(0)
+        while root:
+            tail.next = root.left
+            if root.left:
+                tail = tail.next
+            tail.next = root.right
+            if root.right:
+                tail = tail.next
+            root = root.next
+            if not root:
+                tail = dummy
+                root = dummy.next
+```
+## [Populating Next Right Pointers in Each Node](https://leetcode.com/problems/populating-next-right-pointers-in-each-node/#/description)
+>Given a binary tree
+
+    struct TreeLinkNode {
+      TreeLinkNode left;
+      TreeLinkNode right;
+      TreeLinkNode next;
+    }
+Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.
+
+Initially, all next pointers are set to NULL.
+
+Note:
+
+You may only use constant extra space.
+You may assume that it is a perfect binary tree (ie, all leaves are at the same level, and every parent has two children).
+For example,
+```
+Given the following perfect binary tree,
+         1
+       /  \
+      2    3
+     / \  / \
+    4  5  6  7
+After calling your function, the tree should look like:
+         1 -> NULL
+       /  \
+      2 -> 3 -> NULL
+     / \  / \
+    4->5->6->7 -> NULL
+```
+```python
+# Definition for binary tree with next pointer.
+# class TreeLinkNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+#         self.next = None
+
+class Solution:
+    # @param root, a tree link node
+    # @return nothing
+    def connect(self, root):
+        if not root:
+            return None
+        stack = [root]
+        while stack:
+            lennum = len(stack)
+            header = stack.pop(0)
+            if header.left:
+                stack.append(header.left)
+            if header.right:
+                stack.append(header.right)
+            while lennum > 1:
+                tmp = stack.pop(0)
+                if tmp.left:
+                    stack.append(tmp.left)
+                if tmp.right:
+                    stack.append(tmp.right)
+                header.next = tmp
+                header = tmp
+                lennum -= 1
+```
+## [Sum Root to Leaf Numbers](https://leetcode.com/problems/sum-root-to-leaf-numbers/#/description)
+> Given a binary tree containing digits from 0-9 only, each root-to-leaf path could represent a number.
+
+An example is the root-to-leaf path 1->2->3 which represents the number 123.
+
+Find the total sum of all root-to-leaf numbers.
+
+For example,
+```
+    1
+   / \
+  2   3
+The root-to-leaf path 1->2 represents the number 12.
+The root-to-leaf path 1->3 represents the number 13.
+
+Return the sum = 12 + 13 = 25.
+```
+
+```python
+class Solution(object):
+    def sumNumbers(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root:
+            return 0
+        self.num = 0
+        self.helper(root,0)
+        return self.num
+
+    def helper(self,node,sum):
+        if node.left:
+            self.helper(node.left,sum*10+node.val)
+        if node.right:
+            self.helper(node.right,sum*10+node.val)
+        if not node.left and not node.right:
+            self.num += sum*10+node.val
+            return
+```
+## [Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal/#/description)
+>Given a binary tree, return the preorder traversal of its nodes' values.
+
+For example:
+Given binary tree {1,#,2,3},
+```
+   1
+    \
+     2
+    /
+   3
+```
+return [1,2,3].
+
+Note: Recursive solution is trivial, could you do it iteratively?
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def preorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        ans = []
+        stack = [root]
+        while stack:
+            tmp = stack.pop()
+            if tmp.right:
+                stack.append(tmp.right)
+            if tmp.left:
+                stack.append(tmp.left)
+            ans.append(tmp.val)
+        return ans
+
+```
 ## [Binary Search Tree Iterator](https://leetcode.com/problems/binary-search-tree-iterator/#/description)
 >Implement an iterator over a binary search tree (BST). Your iterator will be initialized with the root node of a BST.
 
